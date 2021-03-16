@@ -69,10 +69,57 @@ const addUser = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 
+const addSwatch = (request, response, body) => {
+  const responseJSON = {
+    message: 'Name is required',
+  };
+
+  if (!body.name) {
+    console.dir(body);
+    responseJSON.id = 'missingParams';
+    return respondJSON(request, response, 400, responseJSON);
+  }
+
+  let responseCode = 201;
+
+  if (users[body.name]) {
+    responseCode = 204;
+  } else {
+    users[body.name] = {};
+  }
+
+  users[body.name].name = body.name;
+  users[body.name].colors = JSON.parse(body.colors);
+
+  if (responseCode === 201) {
+    responseJSON.message = 'Created Successfully!';
+    return respondJSON(request, response, responseCode, responseJSON);
+  }
+
+  return respondJSONMeta(request, response, responseCode);
+};
+
+const getSwatches = (request, response) => {
+  const responseJSON = {
+    message: 'Here are your colors',
+    colors: {
+      one: Math.floor(Math.random() * 16777215).toString(16),
+      two: Math.floor(Math.random() * 16777215).toString(16),
+      three: Math.floor(Math.random() * 16777215).toString(16),
+      four: Math.floor(Math.random() * 16777215).toString(16),
+      five: Math.floor(Math.random() * 16777215).toString(16),
+    },
+  };
+
+  return respondJSON(request, response, 200, responseJSON);
+};
+
 module.exports = {
   getUsers,
   getUsersMeta,
   notFound,
   notFoundMeta,
   addUser,
+  getSwatches,
+  addSwatch
 };

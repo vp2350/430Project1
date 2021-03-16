@@ -6,6 +6,29 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
+    let count = 0;
+    let colorArray = {};
+
+    //Calculating luminosity
+    //https://www.sitepoint.com/javascript-generate-lighter-darker-color/
+    function ColorLuminance(hex, lum) {
+        // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+        if (hex.length < 6) {
+            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        }
+        lum = lum || 0;
+
+        // convert to decimal and change luminosity
+        var rgb = "#", c, i;
+        for (i = 0; i < 3; i++) {
+            c = parseInt(hex.substr(i*2,2), 16);
+            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+            rgb += ("00"+c).substr(c.length);
+        }
+
+        return rgb;
+    }
     const parseJSON = (xhr, content) => {
         if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
             const obj = JSON.parse(xhr.response);
@@ -17,43 +40,71 @@
             else content.innerHTML += `<p>${xhr.response}\</p>`;
         }
     };
+    
+    const addSwatch = (xhr, content) => {
+        if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
+            const obj = JSON.parse(xhr.response);
+            console.dir(obj);
+            
+            if(obj.colors){
+                content.innerHTML += `<div class = \"swatch\" id = \"one\" style=\"background:#${obj.colors.one};\" value=${obj.colors.one} >#${obj.colors.one}\</div>`;
+                content.innerHTML += `<div class = \"swatch\" id = \"two\" style=\"background:#${obj.colors.two};\" value=#${obj.colors.two}>#${obj.colors.two}\</div>`;
+                content.innerHTML += `<div class = \"swatch\" id = \"three\" style=\"background:#${obj.colors.three};\" value=${obj.colors.three}>#${obj.colors.three}\</div>`;
+                content.innerHTML += `<div class = \"swatch\" id = \"four\" style=\"background:#${obj.colors.four};\" value=${obj.colors.four}>#${obj.colors.four}\</div>`;
+                content.innerHTML += `<div class = \"swatch\" id = \"five\" style=\"background:#${obj.colors.five};\" value=${obj.colors.five}>#${obj.colors.five}\</div>`;
+                
+                const getSwatches = (e) => requestSwatchesOnClick(e);
+                const one = document.querySelector("#one");                
+                one.onclick = getSwatches;
+                const two = document.querySelector("#two");                
+                two.onclick = getSwatches;
+                const three = document.querySelector("#three");                
+                three.onclick = getSwatches;
+                const four = document.querySelector("#four");                
+                four.onclick = getSwatches;
+                const five = document.querySelector("#five");                
+                five.onclick = getSwatches;
+            }
+        }
+    }
 
     const handleResponse = (xhr, parse) => {
         const content = document.querySelector('#content');
-        
+        const result = document.querySelector('#result');
         switch(xhr.status){
             case 200:
-                content.innerHTML = '<b>Success!</b>';
+                result.innerHTML = "Sucess!";
+                content.innerHTML = "";
                 break;
             case 201:
-                content.innerHTML = '<b>Created!</b>';
+                result.innerHTML = '<b>Created! Please hit reset to add more</b>';
                 break;
             case 204:
-                content.innerHTML = '<b>Updated (No Content)!</b>';
+                result.innerHTML = '<b>Updated (No Content)!</b>';
                 break;
             case 400:
-                content.innerHTML = '<b>Bad Request!</b>';
+                result.innerHTML = '<b>Bad Request!</b>';
                 break;
              case 404:
-                content.innerHTML = '<b>Resource not founds!</b>';
+                result.innerHTML = '<b>Resource not founds!</b>';
                 break;
             default:
-                content.innerHTML = '<b>Error Code not implemented by client</b>';
+                result.innerHTML = '<b>Error Code not implemented by client</b>';
                 break;
         }
         
-        if(parse) parseJSON(xhr,content);
+        if(parse) addSwatch(xhr,content);
         else content.innerHTML += '<p>Meta Data Received</p>';
     };
     
-    const sendPost = (e, nameForm) => {
+    const sendPost = (e) => {
         e.preventDefault();
         
-        const nameAction = nameForm.getAttribute('action');
-        const nameMethod = nameForm.getAttribute('method');
+        const nameAction = '/addSwatch';
+        const nameMethod = 'post';
         
-        const nameField = nameForm.querySelector('#nameField');
-        const ageField = nameForm.querySelector('#ageField');
+        const nameField = document.querySelector("#saveName");
+        const colorJSON = colorArray;
         
         const xhr = new XMLHttpRequest();
         xhr.open(nameMethod, nameAction);
@@ -63,7 +114,7 @@
         
         xhr.onload = () => handleResponse(xhr, true);
         
-        const formData = `name=${nameField.value}&age=${ageField.value}`;
+        const formData = `name=${nameField.value}&colors=${JSON.stringify(colorJSON)}`;
         xhr.send(formData);
         
         return false; 
@@ -89,15 +140,78 @@
         e.preventDefault();
         return false;
     }
-
-    const init = () => {
-        const nameForm = document.querySelector('#nameForm');
-        const addUser = (e) => sendPost(e, nameForm);
-        nameForm.addEventListener('submit', addUser);
+    
+    const requestSwatches = (e) => {
+        count = 0;
+        console.log(count);
+        colorArray = {};
+        const url = "/getSwatches";
+        const method = "get";
+        start.innerHTML = "Reset";
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url);
         
-        const userForm = document.querySelector('#userForm');
-        const getUsers = (e) => requestUpdate(e, userForm);
-        userForm.addEventListener('submit', getUsers);
+        xhr.setRequestHeader('Accept', 'appication/json');
+        
+        xhr.onload = () => handleResponse(xhr, true);
+
+        xhr.send(); 
+        e.preventDefault();
+        return false;
+    }
+    
+    const requestSwatchesOnClick = (e) => {
+        console.log(count);
+        console.log(colorArray);
+       
+        count++; 
+        colorArray[`${count}`] = e.target.innerHTML;
+        console.log(colorArray);
+        
+        if(count<5){
+            const url = "/getSwatches";
+            const method = "get";
+            start.innerHTML = "Reset";
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+
+            xhr.setRequestHeader('Accept', 'appication/json');
+
+            xhr.onload = () => handleResponse(xhr, true);
+
+            xhr.send(); 
+        }
+        else{
+            let content = document.querySelector("#content");
+            content.innerHTML = "Your selected colors are: ";
+            content.innerHTML += `<div id= "one" style=\"background:${colorArray["1"]};\">\"${colorArray["1"]}\"</div>`;
+            content.innerHTML += `<div id= "two" style=\"background:${colorArray["2"]};\">\"${colorArray["2"]}\"</div>`;
+            content.innerHTML += `<div id= "three" style=\"background:${colorArray["3"]};\">\"${colorArray["3"]}\"</div>`;
+            content.innerHTML += `<div id= "four" style=\"background:${colorArray["4"]};\">\"${colorArray["4"]}\"</div>`;
+            content.innerHTML += `<div id= "five" style=\"background:${colorArray["5"]};\">\"${colorArray["5"]}\"</div>`;
+
+            let saveInput = document.querySelector("#saveName");
+            let saveButton = document.querySelector("#save");
+            let saveLine = document.querySelector("#saveLine");
+            saveButton.style.display = "block";
+            saveInput.style.display = "block";
+            saveLine.style.display = "block";
+        }
+        e.preventDefault();
+        return false;
+    }
+    const init = () => {
+        const saveAllButton = document.querySelector('#save');
+        const addSwatch = (e) => sendPost(e);
+        saveAllButton.addEventListener('click', addSwatch);
+        
+        const getSavedButton = document.querySelector('#getSavedBtn');
+        getSavedButton.onclick = (e) => {
+            let location = window.location.hostname;
+            window.location.href = location + "/saved.html";
+        }
+        
+        start.onclick = requestSwatches;
         
     };
 
@@ -106,27 +220,16 @@
 </head>
 <body>
   <section id="top">
-    <h3>POST Status Code Tests</h3>
-    <form id="nameForm" action="/addUser" method="post">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
-      <input type="submit" value="Add User" />
-    </form>
-    <form id="userForm" action="/getUsers" method="get">
-      <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
-        <option value='/notReal'>/notReal</option>
-      </select>
-      <select id="methodSelect">
-        <option value="get">GET</option>
-        <option value="head">HEAD</option>
-      </select>
-      <input type="submit" value="Get User" />
-    </form>
+    <h1>Aesthetic Picker</h1>
+    <button id="start">START</button>
+    <button id="getSavedBtn">GET SAVED SWATCHES</button>
   </section>
   <section id="content">
   </section>
+  <section id="result">
+  </section>
+  <p id="saveLine">You have selected 5 colors. Please enter a name to save them as, or click reset to start again</p>
+  <input type="text" id="saveName">
+  <button id="save">SAVE ALL</button>
 </body>
 </html>

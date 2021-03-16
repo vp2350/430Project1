@@ -3,6 +3,8 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  color: white;
+  background-color: black;
 }
 
 #top {
@@ -15,7 +17,30 @@ html, body {
 }
 
 #content {
+  display: flex;
   margin-top: 100px;
   font-size: 2em;
   text-align: center;
+}
+
+#success{
+    display: block;
+}
+#one, #two, #three, #four, #five{
+    display: flex;
+    width: 20%;
+    height: 300px;
+    color: invert(background-Color);
+}
+
+#save{
+    display: none;
+}
+
+#saveName{
+    display: none;
+}
+
+#saveLine{
+    display: none;
 }

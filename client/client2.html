@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Our simple HTTP server</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script type="text/babel">
+    const parseJSON = (xhr, content) => {
+        if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
+            const obj = JSON.parse(xhr.response);
+            console.dir(obj);
+            
+            if(obj.message){
+                content.innerHTML += `<p>${obj.message}\</p>`;
+            }
+            else content.innerHTML += `<p>${xhr.response}\</p>`;
+        }
+    };
+    
+    const addSwatch = (xhr, content) => {
+        if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
+            const obj = JSON.parse(xhr.response);
+            console.dir(obj);
+            console.log(obj);
+            if(obj.colors){
+                content.innerHTML += `<div class = \"swatch\" id = \"one\" style=\"background:#${obj.colors.one};\" value=${obj.colors.one} >#${obj.colors.one}\</div>`;
+                content.innerHTML += `<div class = \"swatch\" id = \"two\" style=\"background:#${obj.colors.two};\" value=#${obj.colors.two}>#${obj.colors.two}\</div>`;
+                content.innerHTML += `<div class = \"swatch\" id = \"three\" style=\"background:#${obj.colors.three};\" value=${obj.colors.three}>#${obj.colors.three}\</div>`;
+                content.innerHTML += `<div class = \"swatch\" id = \"four\" style=\"background:#${obj.colors.four};\" value=${obj.colors.four}>#${obj.colors.four}\</div>`;
+                content.innerHTML += `<div class = \"swatch\" id = \"five\" style=\"background:#${obj.colors.five};\" value=${obj.colors.five}>#${obj.colors.five}\</div>`;
+                
+                const getSwatches = (e) => requestSwatchesOnClick(e);
+                const one = document.querySelector("#one");                
+                one.onclick = getSwatches;
+                const two = document.querySelector("#two");                
+                two.onclick = getSwatches;
+                const three = document.querySelector("#three");                
+                three.onclick = getSwatches;
+                const four = document.querySelector("#four");                
+                four.onclick = getSwatches;
+                const five = document.querySelector("#five");                
+                five.onclick = getSwatches;
+            }
+        }
+    }
+
+    const handleResponse = (xhr, parse) => {
+        const content = document.querySelector('#content');
+        const result = document.querySelector('#result');
+        switch(xhr.status){
+            case 200:
+                result.innerHTML = "Sucess!";
+                content.innerHTML = "";
+                break;
+            case 201:
+                result.innerHTML = '<b>Created! Please hit reset to add more</b>';
+                break;
+            case 204:
+                result.innerHTML = '<b>Updated (No Content)!</b>';
+                break;
+            case 400:
+                result.innerHTML = '<b>Bad Request!</b>';
+                break;
+             case 404:
+                result.innerHTML = '<b>Resource not founds!</b>';
+                break;
+            default:
+                result.innerHTML = '<b>Error Code not implemented by client</b>';
+                break;
+        }
+        
+        if(parse) addSwatch(xhr,content);
+        else content.innerHTML += '<p>Meta Data Received</p>';
+    };
+    
+
+    const requestUpdate = (e) => {
+        const url = '/getUsers';
+        const method = "get";
+        
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        
+        xhr.setRequestHeader('Accept', 'appication/json');
+
+        xhr.onload = () => handleResponse(xhr, true);
+
+        
+        xhr.send(); 
+        e.preventDefault();
+        return false;
+    }
+    
+    const init = () => {
+        const homeButton = document.querySelector('#homeBtn');
+        getSavedButton.onclick = (e) => {
+            let location = window.location.hostname;
+            window.location.href = location;
+        }
+        
+        start.onclick = requestSwatches;
+        
+    };
+
+    window.onload = init;
+  </script>
+</head>
+<body>
+  <section id="top">
+    <h1>Aesthetic Picker</h1>
+    <button id="homeBtn">HOME</button>
+  </section>
+  <section id="content">
+  </section>
+</body>
+</html>
