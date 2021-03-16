@@ -21,6 +21,7 @@
         }
     };
     
+    //Adds the saved color swatches to list
     const addSwatch = (xhr, content) => {
         if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
             const obj = JSON.parse(xhr.response);
@@ -54,7 +55,8 @@
                 
         }
     }
-
+   
+    //Only made for the get response really
     const handleResponse = (xhr, parse) => {
         const content = document.querySelector('#content2');
         const result = document.querySelector('#result');
@@ -83,7 +85,8 @@
         addSwatch(xhr,content);
     };
     
-
+    
+    //Gets the list of all the saved colors (saved as users)
     const requestUpdate = () => {
         const url = '/getUsers';
         const method = "get";
@@ -100,6 +103,7 @@
         return false;
     }
     
+    //Code to run on onload
     const init = () => {
         const homeButton = document.querySelector('#homeBtn');
         homeButton.onclick = (e) => {

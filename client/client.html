@@ -11,6 +11,7 @@
 
     //Calculating luminosity
     //https://www.sitepoint.com/javascript-generate-lighter-darker-color/
+    //Sadly could not figure this out in time properly, wanted to switch text color based on the background
     function ColorLuminance(hex, lum) {
         // validate hex string
         hex = String(hex).replace(/[^0-9a-f]/gi, '');
@@ -41,6 +42,7 @@
         }
     };
     
+    //Adds the received colors to the list
     const addSwatch = (xhr, content) => {
         if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
             const obj = JSON.parse(xhr.response);
@@ -68,6 +70,7 @@
         }
     }
 
+    //Gets the response and adds the data to the page
     const handleResponse = (xhr, parse) => {
         const content = document.querySelector('#content');
         const result = document.querySelector('#result');
@@ -97,6 +100,7 @@
         else content.innerHTML += '<p>Meta Data Received</p>';
     };
     
+    //Sends the post request to add the swatches
     const sendPost = (e) => {
         e.preventDefault();
         
@@ -120,6 +124,7 @@
         return false; 
     };
 
+    //Gets all the users (unused)
     const requestUpdate = (e, userForm) => {
         const url = userForm.querySelector('#urlField').value;
         const method = userForm.querySelector('#methodSelect').value;
@@ -141,6 +146,7 @@
         return false;
     }
     
+    //Gets 5 random colors on start
     const requestSwatches = (e) => {
         count = 0;
         console.log(count);
@@ -160,6 +166,7 @@
         return false;
     }
     
+    //Handles a color when clicked
     const requestSwatchesOnClick = (e) => {
         console.log(count);
         console.log(colorArray);
@@ -200,6 +207,8 @@
         e.preventDefault();
         return false;
     }
+    
+    //Start up code
     const init = () => {
         const saveAllButton = document.querySelector('#save');
         const addSwatch = (e) => sendPost(e);
@@ -224,6 +233,8 @@
     <h1>Aesthetic Picker</h1>
     <button id="start">START</button>
     <button id="getSavedBtn">GET SAVED SWATCHES</button>
+    <h2>Press start then click colors to pick them</h2>
+    <h2>To Update previous entries, just select new colors and use the previous name in the name field</h2>
   </section>
   <section id="content">
   </section>

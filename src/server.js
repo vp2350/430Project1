@@ -6,6 +6,7 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+//Handles post requests
 const handlePost = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/addSwatch') {
     const body = [];
@@ -31,6 +32,7 @@ const handlePost = (request, response, parsedUrl) => {
   }
 };
 
+//Handles the get responses
 const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
@@ -49,6 +51,7 @@ const handleGet = (request, response, parsedUrl) => {
   }
 };
 
+//Handles the head responses (not used in this project)
 const handleHead = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
@@ -61,6 +64,7 @@ const handleHead = (request, response, parsedUrl) => {
   }
 };
 
+//Handles client requests
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
   if (request.method === 'POST') {

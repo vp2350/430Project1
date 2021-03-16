@@ -10,6 +10,7 @@ const respondJSON = (request, response, status, object) => {
   response.end();
 };
 
+//Meta only response
 const respondJSONMeta = (request, response, status) => {
   const headers = {
     'Content-Type': 'application/json',
@@ -19,6 +20,7 @@ const respondJSONMeta = (request, response, status) => {
   response.end();
 };
 
+//gets all the users (name with their colors)
 const getUsers = (request, response) => {
   const responseJSON = {
     users,
@@ -39,6 +41,7 @@ const notFound = (request, response) => {
 
 const notFoundMeta = (request, response) => respondJSONMeta(request, response, 404);
 
+//Adds new user (no longer used)
 const addUser = (request, response, body) => {
   const responseJSON = {
     message: 'Name and age are both required',
@@ -69,6 +72,7 @@ const addUser = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 
+//Adds a new swatch with a name and list
 const addSwatch = (request, response, body) => {
   const responseJSON = {
     message: 'Name is required',
@@ -99,6 +103,7 @@ const addSwatch = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 
+//Gets a list of five random colors
 const getSwatches = (request, response) => {
   const responseJSON = {
     message: 'Here are your colors',
