@@ -19,6 +19,16 @@ html, body {
 #content {
   display: flex;
   margin-top: 100px;
+  width: 100%;
+  font-size: 2em;
+  text-align: center;
+}
+
+#content2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 100px;
+  width: 100%;
   font-size: 2em;
   text-align: center;
 }
@@ -30,7 +40,12 @@ html, body {
     display: flex;
     width: 20%;
     height: 300px;
-    color: invert(background-Color);
+}
+
+.saveSwatch{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    height: 100px;
 }
 
 #save{
@@ -43,4 +58,21 @@ html, body {
 
 #saveLine{
     display: none;
+}
+
+#outer-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+}
+
+.swatches {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+}
+
+.list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }

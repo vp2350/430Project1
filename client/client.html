@@ -207,8 +207,9 @@
         
         const getSavedButton = document.querySelector('#getSavedBtn');
         getSavedButton.onclick = (e) => {
-            let location = window.location.hostname;
-            window.location.href = location + "/saved.html";
+            let location = window.location.href;
+            let arr = location.split("/");
+            window.location.href = arr[0] + "/saved.html";
         }
         
         start.onclick = requestSwatches;

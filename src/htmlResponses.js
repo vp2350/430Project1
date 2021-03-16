@@ -16,7 +16,6 @@ const getSavedPages = (request, response) => {
   response.end();
 };
 
-
 const getCSS = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'text/css' });
   response.write(style);

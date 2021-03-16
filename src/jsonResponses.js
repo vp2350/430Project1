@@ -121,5 +121,5 @@ module.exports = {
   notFoundMeta,
   addUser,
   getSwatches,
-  addSwatch
+  addSwatch,
 };

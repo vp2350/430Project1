@@ -34,12 +34,14 @@ const handlePost = (request, response, parsedUrl) => {
 const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
-  }else if (parsedUrl.pathname === '/saved.html') {
+  } else if (parsedUrl.pathname === '/home') {
+    htmlHandler.getIndex(request, response);
+  } else if (parsedUrl.pathname === '/saved.html') {
     htmlHandler.getSavedPages(request, response);
-  }else if (parsedUrl.pathname === '/getUsers') {
+  } else if (parsedUrl.pathname === '/getUsers') {
     jsonHandler.getUsers(request, response);
-  }else if (parsedUrl.pathname === '/getSwatches') {
-    jsonHandler.getSwatches(request, response);      
+  } else if (parsedUrl.pathname === '/getSwatches') {
+    jsonHandler.getSwatches(request, response);
   } else if (parsedUrl.pathname === '/notReal') {
     jsonHandler.notFound(request, response);
   } else {
