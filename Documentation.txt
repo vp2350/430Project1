@@ -1,0 +1,18 @@
+430Project1:
+
+1) What your site does and its purpose
+	The site is an aesthetic picker. It lets the user pick a random color 5 times and saves it as a swatch.
+
+2) What part of your app does the API handle?
+	The API sends the client a list of 5 random hex colors and alo stores the set of user selection, which can be seen on the SAVED SWATCHES page
+
+3) What went right and what went wrong?
+	Right: The app looks really clean and I really like it. It is useful and is something I would use myself
+	Wrong: I wanted to also add the option of adding a random image to the list besides the 5 colors, but I already missed the deadline and wasn't making much headway.
+
+4) If you were to continue, what would you do to improve your app?
+	I would finish the option of adding an image part.
+
+5) How did you go above and beyond?
+	I believe the app is very simple but it is also very elegant and looks very professional. It was also all my code, the code that was borrowed sadly went unused. There are no bugs that I could find, and it perfectly does what it sets out to do. One thing that I further tried to do in the above and beyond was to invert the color of the text based on the background it was on for clearer reading, but I could not completely figure it out.
+
